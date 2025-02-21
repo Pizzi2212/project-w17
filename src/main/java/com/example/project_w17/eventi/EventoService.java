@@ -2,6 +2,8 @@ package com.example.project_w17.eventi;
 
 
 import com.example.project_w17.auth.AppUser;
+import com.example.project_w17.prenotazioni.PrenotazioneRepository;
+import com.example.project_w17.prenotazioni.PrenotazioneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EventoService {
     private final EventoRepository eventoRepository;
+    private final PrenotazioneRepository prenotazioneRepository;
 
     public Evento creazioneEvento(Evento evento, AppUser organizzatore) {
         evento.setOrganizzatore(organizzatore);
@@ -42,5 +45,12 @@ public class EventoService {
 
     public void deleteEvent(Long id) {
         eventoRepository.deleteById(id);
+    }
+
+    public int getPostiDisponibili(Long eventoId) {
+        Evento evento = eventoRepository.findById(eventoId)
+                .orElseThrow(() -> new RuntimeException("Evento non trovato"));
+        int prenotazioni = prenotazioneRepository.findByEvento(evento).size();
+        return evento.getMaxPartecipanti() - prenotazioni;
     }
 }

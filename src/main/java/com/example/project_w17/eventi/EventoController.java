@@ -45,4 +45,9 @@ public class EventoController {
         eventService.deleteEvent(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}/posti-disponibili")
+    public ResponseEntity<Integer> getPostiDisponibili(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getPostiDisponibili(id));
+    }
 }
